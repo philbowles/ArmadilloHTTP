@@ -1,0 +1,43 @@
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+ArmadilloHTTP	KEYWORD1
+ArmadilloHTTPresponse	KEYWORD1
+ARMA_HTTP_REPLY	KEYWORD1
+ARMA_FN_HTTP	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+ARMA_PRINT1	KEYWORD2
+ARMA_PRINT2	KEYWORD2
+ARMA_PRINT3	KEYWORD2
+ARMA_PRINT4	KEYWORD2
+
+asJsonstring	KEYWORD2
+asSimpleJson	KEYWORD2
+asStdstring	KEYWORD2
+addRequestHeader	KEYWORD2
+onHTTPerror	KEYWORD2
+DELETE	KEYWORD2
+GET	KEYWORD2
+PATCH	KEYWORD2
+POST	KEYWORD2
+PUT	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+ARMA_ERROR_BUSY	LITERAL1
+ARMA_ERROR_HTTP	LITERAL1
+ARMA_ERROR_TOO_BIG	LITERAL1
+ARMA_ERROR_TCP_UNHANDLED	LITERAL1
+ARMA_ERROR_VERB_PROHIBITED	LITERAL1
+ARMA_ERROR_CHUNKED	LITERAL1
+
+ARMA_PHASE_PREFLIGHT	LITERAL1
+ARMA_PHASE_MEASURE	LITERAL1
+ARMA_PHASE_EXECUTE	LITERAL1

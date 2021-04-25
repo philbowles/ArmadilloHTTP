@@ -1,0 +1,5 @@
+SOONEST:
+SOON:
+    follow redirects
+MEDIUM-TERM:
+DREAMLAND:
