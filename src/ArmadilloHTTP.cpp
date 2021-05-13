@@ -20,7 +20,8 @@ void ArmadilloHTTP::_execute(const uint8_t* d,size_t s){
     _response.data=d;
     _response.length=s;
     _userfn(_response);
-    if(_compareHeader("Connection","close")) close();
+    _inflight=false;
+    if(_compareHeader("Connection","close"))close();
 }
 
 size_t ArmadilloHTTP::_getContentLength(){
@@ -58,14 +59,18 @@ void ArmadilloHTTP::_preflight(const uint8_t* d,size_t s){
 }
 
 void ArmadilloHTTP::_prepare(uint32_t phase,const std::string& verb,const std::string& url,ARMA_FN_HTTP f,const VARK_NVP_MAP& fields){
-    if(connected()) _error(ARMA_ERROR_BUSY);
+    if(_inflight) {
+        ARMA_PRINT4("REJECTED: BUSY - %s %s\n",verb.data(),url.data());
+        _error(ARMA_ERROR_BUSY);
+    }
     else {
+        _inflight=true;
         _phaseVerb[ARMA_PHASE_EXECUTE]=verb;
         _userfn=f;
         //
         _parseURL(url);
         if(fields.size()){
-            if(requestHeaders.count(contentTypeTag())){
+           if(requestHeaders.count(contentTypeTag())){
                 string type=requestHeaders[contentTypeTag()];
                     if(type=="application/json") _bodydata=nvp2json(fields);
 //                    else ARMA_PRINT1("unknown c-type %s\n",type.data());
@@ -76,7 +81,7 @@ void ArmadilloHTTP::_prepare(uint32_t phase,const std::string& verb,const std::s
             }
         }
         //     
-        onTCPconnect([=](){ _sendRequest(phase); });
+        onTCPconnect([=](){_sendRequest(phase); });
         TCPconnect();
     }
 }
@@ -166,7 +171,6 @@ void ArmadilloHTTP::_rx(const uint8_t* d,size_t s){
         hdrs.clear();
 //      headers decoded
 //        for(auto const h:_response.responseHeaders) ARMA_PRINT1("RH %s=%s\n",h.first.c_str(),h.second.c_str());
-//        ARMA_PRINT4("READY TO RUMBLE 0x%08x len=%d FH=%u\n",(void*) pMsg,msgLen,_HAL_freeHeap());
         if(_compareHeader("TRANSFER-ENCODING","CHUNKED")) _chunkItUp(pMsg,d,s);
         else {
             switch(_phase){
@@ -185,6 +189,7 @@ void ArmadilloHTTP::_rx(const uint8_t* d,size_t s){
 }
 
 void ArmadilloHTTP::_scavenge(){
+    ARMA_PRINT4("_scavenge() IN FH=%u\n",_HAL_freeHeap());
     _bodydata.clear();
     requestHeaders.clear();
     _response.responseHeaders.clear();
@@ -193,12 +198,14 @@ void ArmadilloHTTP::_scavenge(){
     _phase=ARMA_PHASE_PREFLIGHT;
     for(auto &c:_chunks) c.clear();
     _sigmaChunx=0;
+    _inflight=false;
+    ARMA_PRINT4("_scavenge() UT FH=%u\n",_HAL_freeHeap());
 }
 
 void ArmadilloHTTP::_sendRequest(uint32_t phase){
    _phase=phase;
     std::string req=_phaseVerb[_phase]+" ";
-    req.append(_URL->path).append(_URL->query.size() ? std::string("?")+_URL->query:"").append(" HTTP/1.1\r\nHost: ").append(_URL->host).append("\r\n");
+    req.append(_URL.path).append(_URL.query.size() ? std::string("?")+_URL.query:"").append(" HTTP/1.1\r\nHost: ").append(_URL.host).append("\r\n");
     req.append("User-Agent: ArmadilloHTTP/").append(ARDUINO_BOARD).append("/").append(ARMADILLO_VERSION).append("\r\n");
     switch(phase){
         case ARMA_PHASE_PREFLIGHT:
@@ -207,6 +214,7 @@ void ArmadilloHTTP::_sendRequest(uint32_t phase){
             break;
         case ARMA_PHASE_EXECUTE:
             addRequestHeader(contentLengthTag(),stringFromInt(_bodydata.size()));
+            addRequestHeader("Connection","close");
             _appendHeaders(&req);
             req+=_bodydata;
             break;
@@ -214,6 +222,5 @@ void ArmadilloHTTP::_sendRequest(uint32_t phase){
             _appendHeaders(&req);
             break;
     }
-    ARMA_PRINT1("SENDING: len=%d 0x%08x\n%s\n",req.size(),(void*) req.c_str(),req.c_str());
     txdata((const uint8_t*) req.c_str(),req.size()); // hang on to the string :)
 }

@@ -86,7 +86,7 @@ VARK_NVP_MAP post_put_patch = {
   {"userId","1"}
 };
 
-void responseHandler(ARMA_HTTP_REPLY r){ // r is a stutc with all the necessary field in it: see the docs
+void responseHandler(ARMA_HTTP_REPLY r){ // r is a struct with all the necessary field in it: see the docs
   Serial.printf("HTTP Response Code: %d\n",r.httpResponseCode);
   Serial.printf("Response Headers:\n");
   for(auto const h:r.responseHeaders) Serial.printf("%s=%s\n",h.first.data(),h.second.data());

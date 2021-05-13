@@ -1,4 +1,5 @@
 SOONEST:
+    look at reassembly?
 SOON:
     follow redirects
 MEDIUM-TERM:

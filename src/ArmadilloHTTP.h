@@ -74,7 +74,8 @@ class ArmadilloHTTP: public AardvarkTCP {
         std::string     _bodydata;
         size_t          _sigmaChunx=0;
         uint32_t        _phase=0;
-
+        bool            _inflight=false;
+        
         ARMA_INT_MAP _phaseVerb={
             {ARMA_PHASE_PREFLIGHT,"OPTIONS"},
             {ARMA_PHASE_MEASURE,"HEAD"},
@@ -113,9 +114,9 @@ class ArmadilloHTTP: public AardvarkTCP {
         void            addRequestHeader(const std::string& hdr,const std::string& value){ requestHeaders[uppercase(hdr)]=value; }
         void            onHTTPerror(VARK_cbError callback){ onTCPerror(callback); }
 
-        void            DELETE(const std::string& url,ARMA_FN_HTTP rx,const uint8_t* fingerprint=nullptr,uint32_t phase=ARMA_PHASE_EXECUTE){ _prepare(phase,"DELETE",url,rx,{}); }
-        void            GET(const std::string& url,ARMA_FN_HTTP rx,const uint8_t* fingerprint=nullptr,uint32_t phase=ARMA_PHASE_EXECUTE){ _prepare(phase,"GET",url,rx,{}); }
-        void            PATCH(const std::string& url,const VARK_NVP_MAP& fields,ARMA_FN_HTTP rx,const uint8_t* fingerprint=nullptr,uint32_t phase=ARMA_PHASE_EXECUTE){ _prepare(phase,"PATCH",url,rx,fields); }
-        void            POST(const std::string& url,const VARK_NVP_MAP& fields,ARMA_FN_HTTP rx,const uint8_t* fingerprint=nullptr,uint32_t phase=ARMA_PHASE_EXECUTE){ _prepare(phase,"POST",url,rx,fields); }
-        void            PUT(const std::string& url,const VARK_NVP_MAP& fields,ARMA_FN_HTTP rx,const uint8_t* fingerprint=nullptr,uint32_t phase=ARMA_PHASE_EXECUTE){ _prepare(phase,"PUT",url,rx,fields); }
+        virtual void    DELETE(const std::string& url,ARMA_FN_HTTP rx,const uint8_t* fingerprint=nullptr,uint32_t phase=ARMA_PHASE_EXECUTE){ _prepare(phase,"DELETE",url,rx,{}); }
+        virtual void    GET(const std::string& url,ARMA_FN_HTTP rx,const uint8_t* fingerprint=nullptr,uint32_t phase=ARMA_PHASE_EXECUTE){ _prepare(phase,"GET",url,rx,{}); }
+        virtual void    PATCH(const std::string& url,const VARK_NVP_MAP& fields,ARMA_FN_HTTP rx,const uint8_t* fingerprint=nullptr,uint32_t phase=ARMA_PHASE_EXECUTE){ _prepare(phase,"PATCH",url,rx,fields); }
+        virtual void    POST(const std::string& url,const VARK_NVP_MAP& fields,ARMA_FN_HTTP rx,const uint8_t* fingerprint=nullptr,uint32_t phase=ARMA_PHASE_EXECUTE){ _prepare(phase,"POST",url,rx,fields); }
+        virtual void    PUT(const std::string& url,const VARK_NVP_MAP& fields,ARMA_FN_HTTP rx,const uint8_t* fingerprint=nullptr,uint32_t phase=ARMA_PHASE_EXECUTE){ _prepare(phase,"PUT",url,rx,fields); }
 };

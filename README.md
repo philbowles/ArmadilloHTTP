@@ -2,7 +2,9 @@
 
 # ArduinoIDE Asynchronous HTTP client library for ESP8266, ESP32
 
-## Version 0.1.0
+## Version 0.1.1
+
+Read [Release Notes 0.1.1](docs/rn011.md)
 
 ---
 
