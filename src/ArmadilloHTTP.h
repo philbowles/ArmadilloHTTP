@@ -60,9 +60,9 @@ struct ArmadilloHTTPresponse {
     const uint8_t*  data;
     size_t          length;
 
-    std::string     asJsonstring(){ return (responseHeaders[contentTypeTag()].find("json")!=std::string::npos) ? string((const char*) data, length):""; }
+    std::string     asJsonstring(){ return (responseHeaders[contentTypeTag()].find("json")!=std::string::npos) ? std::string((const char*) data, length):""; }
     VARK_NVP_MAP    asSimpleJson(){ return json2nvp(asJsonstring()); }
-    std::string     asStdstring(){ return string((const char*) data, length); }
+    std::string     asStdstring(){ return std::string((const char*) data, length); }
 };
 
 using ARMA_HTTP_REPLY  = struct ArmadilloHTTPresponse;

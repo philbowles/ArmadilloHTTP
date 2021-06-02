@@ -41,7 +41,6 @@ void ArmadilloHTTP::_getMethods(const std::string& hdr){
     }
 }
 
-//                        add keep alives!
 void ArmadilloHTTP::_measure(const uint8_t* d,size_t s){
     size_t len=_getContentLength();
     if(len){
@@ -53,7 +52,6 @@ void ArmadilloHTTP::_measure(const uint8_t* d,size_t s){
 void ArmadilloHTTP::_preflight(const uint8_t* d,size_t s){
     _getMethods("ALLOW");
     _getMethods("ACCESS-CONTROL-ALLOW-METHODS");
-//    for(auto const& m:_response.allowedMethods) ARMA_PRINT1("ALLOWED METHOD: *%s*\n",m.c_str());
     if(_response.allowedMethods.count(_phaseVerb[ARMA_PHASE_EXECUTE])) _sendRequest(ARMA_PHASE_MEASURE);
     else _error(ARMA_ERROR_VERB_PROHIBITED);
 }
@@ -71,7 +69,7 @@ void ArmadilloHTTP::_prepare(uint32_t phase,const std::string& verb,const std::s
         _parseURL(url);
         if(fields.size()){
            if(requestHeaders.count(contentTypeTag())){
-                string type=requestHeaders[contentTypeTag()];
+                std::string type=requestHeaders[contentTypeTag()];
                     if(type=="application/json") _bodydata=nvp2json(fields);
 //                    else ARMA_PRINT1("unknown c-type %s\n",type.data());
             } 
@@ -169,7 +167,6 @@ void ArmadilloHTTP::_rx(const uint8_t* d,size_t s){
         rawheaders.clear();
         rawheaders.shrink_to_fit();
         hdrs.clear();
-//      headers decoded
 //        for(auto const h:_response.responseHeaders) ARMA_PRINT1("RH %s=%s\n",h.first.c_str(),h.second.c_str());
         if(_compareHeader("TRANSFER-ENCODING","CHUNKED")) _chunkItUp(pMsg,d,s);
         else {
