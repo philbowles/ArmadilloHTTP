@@ -248,14 +248,6 @@ void PUT(const std::string& url,const VARK_NVP_MAP& fields,ARMA_FN_HTTP rx,const
 
 # Problems / Support
 
-## IMPORTANT NOTE FOR PLATFORMIO USERS
-
-ArmadilloHTTP is an *Arduino library*, and is 100% compatible with the ArduinoIDE and its build system. PlatformIO, sadly, ***is not***. If PlatformIO has problems with code that compiles and runs correctly under ArduinoIDE, then it is a ***PlatformIO problem***, not an issue with this - or any other - valid Arduino library.
-
-For this reason, I will not accept any issues relating to build problems with PlatformIO, nor any pull requests nor other suggestions which involve any changes that render this library less than 100% ArduinoIDE compatible.
-
-## Non PlatformIO-related issues
-
 Your **first** point of contact should be one of the facebook groups below, if only to let me know you have raised an issue here. Obviously I will check the issues from time to time, but I do no have the time to check every day.
 
 If you want a rapid response, I am daily moderating those FB groups so you are likely to get a rapid response.
